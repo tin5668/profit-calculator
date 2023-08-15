@@ -37,6 +37,21 @@
         input[readonly] {
             background-color: #f3f3f3;
         }
+
+        /* タブレット向けのスタイル */
+        @media screen and (min-width: 600px) {
+            label, input, button {
+                width: 80%; 
+                margin: 0 auto; 
+            }
+        }
+
+        /* デスクトップPC向けのスタイル */
+        @media screen and (min-width: 1024px) {
+            label, input, button {
+                width: 60%; 
+            }
+        }
     </style>
 </head>
 <body>
