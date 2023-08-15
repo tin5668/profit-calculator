@@ -22,6 +22,11 @@
             border-radius: 5px;
         }
 
+        .inlineDiv {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
         button {
             cursor: pointer;
             background-color: #4CAF50;
@@ -53,8 +58,14 @@
     </div>
 
     <div>
-        <label>5のつく日:</label>
-        <input type="checkbox" id="fiveDayCheckbox">
+        <div class="inlineDiv">
+            <label>5のつく日:</label>
+            <input type="checkbox" id="fiveDayCheckbox">
+        </div>
+        <div class="inlineDiv">
+            <label for="totalPointPercentage">合計ポイント率:</label>
+            <input type="number" id="totalPointPercentage" readonly>
+        </div>
     </div>
 
     <div>
@@ -70,8 +81,13 @@
     <button onclick="calculate()">計算</button>
 
     <div>
-        <label for="points">もらえるポイント:</label>
-        <input type="number" id="points" readonly>
+        <label for="basePoints">基本ポイント:</label>
+        <input type="number" id="basePoints" readonly>
+    </div>
+
+    <div>
+        <label for="bonusPoints">+5% ポイント:</label>
+        <input type="number" id="bonusPoints" readonly>
     </div>
 
     <div>
@@ -97,10 +113,14 @@
             const coupon = parseFloat(document.getElementById("coupon").value);
             const isFiveDay = document.getElementById("fiveDayCheckbox").checked;
             const taxRate = 10;  // 10%固定
+            let bonusPercentage = 0;
 
             if (isFiveDay) {
-                pointPercentage += 5; // 5のつく日のチェックが入っている場合、ポイント率を5%増加
+                bonusPercentage = 5;
             }
+
+            const totalPointPercentage = pointPercentage + bonusPercentage;
+            document.getElementById("totalPointPercentage").value = totalPointPercentage;
 
             if (isNaN(price) || isNaN(pointPercentage) || isNaN(purchasePrice) || isNaN(coupon)) {
                 alert("価格、基本ポイント率、買取価格、およびクーポンを正確に入力してください。");
@@ -109,12 +129,19 @@
 
             const reducedPrice = price - coupon;
             const taxExemptPrice = reducedPrice / (1 + taxRate / 100);
-            const earnedPoints = taxExemptPrice * (pointPercentage / 100);
-            const netPrice = reducedPrice - earnedPoints;
+            const basePoints = taxExemptPrice * (pointPercentage / 100);
+            let bonusPoints = taxExemptPrice * (bonusPercentage / 100);
+
+            if (bonusPoints > 1000) {
+                bonusPoints = 1000;
+            }
+
+            const netPrice = reducedPrice - (basePoints + bonusPoints);
             const profitValue = purchasePrice - netPrice;
             const roiValue = (profitValue / netPrice) * 100;
 
-            document.getElementById("points").value = earnedPoints.toFixed(2);
+            document.getElementById("basePoints").value = basePoints.toFixed(2);
+            document.getElementById("bonusPoints").value = bonusPoints.toFixed(2);
             document.getElementById("netPrice").value = netPrice.toFixed(2);
             document.getElementById("profit").value = profitValue.toFixed(2);
             document.getElementById("roi").value = roiValue.toFixed(2);
