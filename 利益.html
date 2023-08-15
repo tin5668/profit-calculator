@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>利益計算ツール</title>
+    <title>ヤフショ利益計算ツール</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <h1>利益計算ツール</h1>
+    <h1>ヤフショ利益計算ツール</h1>
 
     <div>
         <label for="price">価格 (税込み):</label>
@@ -63,8 +63,8 @@
     </div>
 
     <div>
-        <label for="pointPercentage">ポイント率 (%):</label>
-        <input type="number" id="pointPercentage" placeholder="例: 10" value="10">
+        <label for="pointPercentage">基本ポイント率(ポイントサイト含む） (%):</label>
+        <input type="number" id="pointPercentage" placeholder="例: 8.3" value="8.3">
     </div>
 
     <div>
@@ -108,7 +108,7 @@
             const taxRate = 10;  // 10%固定
 
             if (isNaN(price) || isNaN(pointPercentage) || isNaN(purchasePrice) || isNaN(coupon)) {
-                alert("価格、ポイント率、買取価格、およびクーポンを正確に入力してください。");
+                alert("価格、基本ポイント率、買取価格、およびクーポンを正確に入力してください。");
                 return;
             }
 
