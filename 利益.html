@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>利益計算ツール</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+        }
+
+        div {
+            margin-bottom: 20px;
+        }
+
+        label, input, button {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[readonly] {
+            background-color: #f3f3f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>利益計算ツール</h1>
+
+    <div>
+        <label for="price">価格 (税込み):</label>
+        <input type="number" id="price" placeholder="例: 1100">
+    </div>
+
+    <div>
+        <label for="pointPercentage">ポイント率 (%):</label>
+        <input type="number" id="pointPercentage" placeholder="例: 10" value="10">
+    </div>
+
+    <div>
+        <label for="purchasePrice">買取価格:</label>
+        <input type="number" id="purchasePrice" placeholder="例: 1500">
+    </div>
+
+    <div>
+        <label for="coupon">クーポン:</label>
+        <input type="number" id="coupon" placeholder="例: 100" value="0">
+    </div>
+
+    <button onclick="calculate()">計算</button>
+
+    <div>
+        <label for="points">もらえるポイント:</label>
+        <input type="number" id="points" readonly>
+    </div>
+
+    <div>
+        <label for="netPrice">実質価格:</label>
+        <input type="number" id="netPrice" readonly>
+    </div>
+
+    <div>
+        <label for="profit">利益額:</label>
+        <input type="number" id="profit" readonly>
+    </div>
+
+    <div>
+        <label for="roi">ROI (%):</label>
+        <input type="number" id="roi" readonly>
+    </div>
+
+    <script>
+        function calculate() {
+            const price = parseFloat(document.getElementById("price").value);
+            const pointPercentage = parseFloat(document.getElementById("pointPercentage").value);
+            const purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
+            const coupon = parseFloat(document.getElementById("coupon").value);
+            const taxRate = 10;  // 10%固定
+
+            if (isNaN(price) || isNaN(pointPercentage) || isNaN(purchasePrice) || isNaN(coupon)) {
+                alert("価格、ポイント率、買取価格、およびクーポンを正確に入力してください。");
+                return;
+            }
+
+            const reducedPrice = price - coupon;
+            const taxExemptPrice = reducedPrice / (1 + taxRate / 100);
+            const earnedPoints = taxExemptPrice * (pointPercentage / 100);
+            const netPrice = reducedPrice - earnedPoints;
+            const profitValue = purchasePrice - netPrice;
+            const roiValue = (profitValue / netPrice) * 100;
+
+            document.getElementById("points").value = earnedPoints.toFixed(2);
+            document.getElementById("netPrice").value = netPrice.toFixed(2);
+            document.getElementById("profit").value = profitValue.toFixed(2);
+            document.getElementById("roi").value = roiValue.toFixed(2);
+        }
+    </script>
+</body>
+</html>
