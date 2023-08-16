@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,17 +15,14 @@
             margin-bottom: 20px;
         }
 
-        label, input, button {
+        label,
+        input,
+        button {
             width: 100%;
             box-sizing: border-box;
             padding: 12px;
             font-size: 16px;
             border-radius: 5px;
-        }
-
-        .inlineDiv {
-            display: inline-block;
-            margin-right: 10px;
         }
 
         button {
@@ -44,6 +42,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>ヤフショ利益計算ツール</h1>
 
@@ -58,14 +57,18 @@
     </div>
 
     <div>
-        <div class="inlineDiv">
-            <label>5のつく日:</label>
-            <input type="checkbox" id="fiveDayCheckbox">
-        </div>
-        <div class="inlineDiv">
-            <label for="totalPointPercentage">合計ポイント率:</label>
-            <input type="number" id="totalPointPercentage" readonly>
-        </div>
+        <label>5のつく日:</label>
+        <input type="checkbox" id="fifthDay">
+    </div>
+
+    <div>
+        <label>買う買うサンデー:</label>
+        <input type="checkbox" id="sundayBuy">
+    </div>
+
+    <div>
+        <label>合計ポイント率 (%):</label>
+        <input type="number" id="totalPointPercentage" value="8.3" readonly>
     </div>
 
     <div>
@@ -75,19 +78,19 @@
 
     <div>
         <label for="coupon">クーポン:</label>
-        <input type="number" id="coupon" placeholder="例: 100" value="0">
+        <input type="number" id="coupon" placeholder="例: 0" value="0">
     </div>
 
     <button onclick="calculate()">計算</button>
 
     <div>
-        <label for="basePoints">基本ポイント:</label>
-        <input type="number" id="basePoints" readonly>
+        <label for="basicPoints">基本ポイント:</label>
+        <input type="number" id="basicPoints" readonly>
     </div>
 
     <div>
-        <label for="bonusPoints">+5% ポイント:</label>
-        <input type="number" id="bonusPoints" readonly>
+        <label for="eventPoints">イベントのポイント:</label>
+        <input type="number" id="eventPoints" readonly>
     </div>
 
     <div>
@@ -108,44 +111,47 @@
     <script>
         function calculate() {
             const price = parseFloat(document.getElementById("price").value);
-            let pointPercentage = parseFloat(document.getElementById("pointPercentage").value);
-            const purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
+            const basePointPercentage = parseFloat(document.getElementById("pointPercentage").value);
+            const purchasePrice = document.getElementById("purchasePrice").value ? parseFloat(document.getElementById("purchasePrice").value) : null;
             const coupon = parseFloat(document.getElementById("coupon").value);
-            const isFiveDay = document.getElementById("fiveDayCheckbox").checked;
+            const isFifthDayChecked = document.getElementById("fifthDay").checked;
+            const isSundayBuyChecked = document.getElementById("sundayBuy").checked;
             const taxRate = 10;  // 10%固定
-            let bonusPercentage = 0;
 
-            if (isFiveDay) {
-                bonusPercentage = 5;
+            let eventPointsRate = 0;
+            if (isFifthDayChecked) {
+                eventPointsRate += 4; 
+            }
+            if (isSundayBuyChecked) {
+                eventPointsRate += 5; 
             }
 
-            const totalPointPercentage = pointPercentage + bonusPercentage;
+            const totalPointPercentage = basePointPercentage + eventPointsRate;
             document.getElementById("totalPointPercentage").value = totalPointPercentage;
-
-            if (isNaN(price) || isNaN(pointPercentage) || isNaN(purchasePrice) || isNaN(coupon)) {
-                alert("価格、基本ポイント率、買取価格、およびクーポンを正確に入力してください。");
-                return;
-            }
 
             const reducedPrice = price - coupon;
             const taxExemptPrice = reducedPrice / (1 + taxRate / 100);
-            const basePoints = taxExemptPrice * (pointPercentage / 100);
-            let bonusPoints = taxExemptPrice * (bonusPercentage / 100);
-
-            if (bonusPoints > 1000) {
-                bonusPoints = 1000;
+            const basicPoints = taxExemptPrice * (basePointPercentage / 100);
+            let extraPoints = taxExemptPrice * (eventPointsRate / 100);
+            if (isFifthDayChecked) {
+                extraPoints = Math.min(extraPoints, 1000);  // 最大1000ポイント
             }
+            if (isSundayBuyChecked) {
+                extraPoints = Math.min(extraPoints, 5000);  // 最大5000ポイント
+            }
+            
+            const netPrice = reducedPrice - basicPoints - extraPoints;
+            const profitValue = purchasePrice ? purchasePrice - netPrice : null;
+            const roiValue = profitValue !== null ? (profitValue / netPrice) * 100 : null;
 
-            const netPrice = reducedPrice - (basePoints + bonusPoints);
-            const profitValue = purchasePrice - netPrice;
-            const roiValue = (profitValue / netPrice) * 100;
-
-            document.getElementById("basePoints").value = basePoints.toFixed(2);
-            document.getElementById("bonusPoints").value = bonusPoints.toFixed(2);
+            document.getElementById("basicPoints").value = basicPoints.toFixed(2);
+            document.getElementById("eventPoints").value = extraPoints.toFixed(2);
             document.getElementById("netPrice").value = netPrice.toFixed(2);
-            document.getElementById("profit").value = profitValue.toFixed(2);
-            document.getElementById("roi").value = roiValue.toFixed(2);
+            document.getElementById("profit").value = profitValue !== null ? profitValue.toFixed(2) : "";
+            document.getElementById("roi").value = roiValue !== null ? roiValue.toFixed(2) : "";
         }
     </script>
+
 </body>
+
 </html>
