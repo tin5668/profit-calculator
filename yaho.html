@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ヤフショ利益計算ツール</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        div {
+            margin-bottom: 20px;
+        }
+
+        label, input, button {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #400080;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #330066;
+        }
+
+        input[readonly], input[type="checkbox"] {
+            background-color: #f3f3f3;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #400080;
+            border-bottom: 2px solid #400080;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ヤフショ利益計算ツール</h1>
+
+    <div>
+        <label for="price">価格 (税込み):</label>
+        <input type="number" id="price" placeholder="例: 1100">
+    </div>
+
+    <div>
+        <label for="basePointPercentage">基本ポイント率(ポイントサイト含む) (%):</label>
+        <input type="number" id="basePointPercentage" placeholder="例: 8.3" value="8.3">
+    </div>
+
+    <div>
+        <label for="additionalPoint">追加ポイント (%):</label>
+        <input type="number" id="additionalPoint" placeholder="例: 5">
+    </div>
+
+    <div>
+        <label for="pointLimit">追加ポイント上限:</label>
+        <input type="number" id="pointLimit" placeholder="例: 5000">
+    </div>
+
+    <div>
+        <label for="totalPointPercentage">合計ポイント率 (%):</label>
+        <input type="text" id="totalPointPercentage" readonly>
+    </div>
+
+    <div>
+        <label for="purchasePrice">買取価格:</label>
+        <input type="number" id="purchasePrice" placeholder="例: 1500">
+    </div>
+
+    <div>
+        <label for="coupon">クーポン:</label>
+        <input type="number" id="coupon" placeholder="例: 100" value="0">
+    </div>
+
+    <button onclick="calculate()">計算</button>
+
+    <div>
+        <label for="points">基本ポイント:</label>
+        <input type="number" id="points" readonly>
+    </div>
+
+    <div>
+        <label for="bonusPoints">追加ポイント:</label>
+        <input type="number" id="bonusPoints" readonly>
+    </div>
+
+    <div>
+        <label for="netPrice">実質価格:</label>
+        <input type="number" id="netPrice" readonly>
+    </div>
+
+    <div>
+        <label for="profit">利益額:</label>
+        <input type="number" id="profit" readonly>
+    </div>
+
+    <div>
+        <label for="roi">ROI (%):</label>
+        <input type="number" id="roi" readonly>
+    </div>
+
+    <script>
+        function calculate() {
+            const price = parseFloat(document.getElementById("price").value);
+            const pointPercentage = parseFloat(document.getElementById("basePointPercentage").value);
+            const additionalPoint = parseFloat(document.getElementById("additionalPoint").value);
+            const pointLimit = parseFloat(document.getElementById("pointLimit").value);
+            const purchasePriceInput = document.getElementById("purchasePrice");
+            const purchasePrice = purchasePriceInput.value ? parseFloat(purchasePriceInput.value) : null;
+            const coupon = document.getElementById("coupon").value ? parseFloat(document.getElementById("coupon").value) : 0;
+
+            const reducedPrice = price - coupon;
+            const taxExemptPrice = reducedPrice / 1.1;
+            const basePoints = taxExemptPrice * (pointPercentage / 100);
+            
+            const bonusPoints = Math.min(taxExemptPrice * (additionalPoint / 100), pointLimit);
+
+            const totalBonusPercentage = (bonusPoints / taxExemptPrice) * 100;
+            const totalPointPercentage = pointPercentage + totalBonusPercentage;
+
+            const netPrice = reducedPrice - (basePoints + bonusPoints);
+
+            document.getElementById("totalPointPercentage").value = totalPointPercentage.toFixed(2) + "%";
+            document.getElementById("points").value = basePoints.toFixed(2);
+            document.getElementById("bonusPoints").value = bonusPoints.toFixed(2);
+            document.getElementById("netPrice").value = netPrice.toFixed(2);
+
+            if (purchasePrice !== null) {
+                const profitValue = purchasePrice - netPrice;
+                const roiValue = (profitValue / netPrice) * 100;
+                document.getElementById("profit").value = profitValue.toFixed(2);
+                document.getElementById("roi").value = roiValue.toFixed(2);
+            } else {
+                document.getElementById("profit").value = "";
+                document.getElementById("roi").value = "";
+            }
+        }
+    </script>
+</body>
+
+</html>
