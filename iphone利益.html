@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone 計算ツール</title>
+    <style>
+        body {
+            font-family: 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, p {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        label, select, input, button {
+            display: block;
+            width: 90%;
+            max-width: 400px;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0058D0;
+        }
+    </style>
+</head>
+<body>
+    <h1>iPhone 計算ツール</h1>
+
+    <label for="iphoneModel">iPhoneモデル:</label>
+    <select id="iphoneModel">
+        <option value="15pro128">15pro128</option>
+        <option value="15pro256">15pro256</option>
+        <option value="15proMAX256">15proMAX256</option>
+    </select>
+
+    <label for="creditCard">使用するクレジットカード:</label>
+    <select id="creditCard">
+        <option value="none">--選択してください--</option>
+        <option value="マイレージセゾンプラチナ">マイレージセゾンプラチナ</option>
+        <option value="PAYPAYカードゴールド">PAYPAYカードゴールド</option>
+        <option value="ジャックスプラチナ">ジャックスプラチナ</option>
+        <option value="マリオットカード">マリオットカード</option>
+    </select>
+
+    <label for="buybackPrice">買取価格 (¥):</label>
+    <input type="number" id="buybackPrice" placeholder="例: 120000">
+
+    <button onclick="calculate()">計算</button>
+
+    <h2>結果:</h2>
+    <p>定価: <span id="defaultPrice">159800</span> ¥</p>
+    <p>実質価格: <span id="realPrice">0</span> ¥</p>
+    <p>利益: <span id="profit">0</span> ¥</p>
+    <p>クレジットカード特典: <span id="cardBenefit">-</span></p>
+
+    <script>
+        const modelPrices = {
+            "15pro128": 159800,
+            "15pro256": 174800,
+            "15proMAX256": 189800
+        };
+
+        function calculate() {
+            let model = document.getElementById("iphoneModel").value;
+            let card = document.getElementById("creditCard").value;
+            let initial = modelPrices[model];
+            let benefitPercent = 0;
+            let benefitValue = 0;
+            let benefitText = "";
+            let buyback = parseFloat(document.getElementById("buybackPrice").value) || 0;
+
+            if (card === "マイレージセゾンプラチナ") {
+                benefitPercent = 0.015;
+                benefitValue = initial * benefitPercent;
+                benefitText = "※マイル " + benefitValue.toFixed(0);
+            } else if (card === "PAYPAYカードゴールド") {
+                benefitPercent = 0.02;
+                benefitValue = initial * benefitPercent;
+                benefitText = "※ポイント " + benefitValue.toFixed(0);
+            } else if (card === "ジャックスプラチナ") {
+                benefitPercent = 0.015;
+                benefitValue = initial * benefitPercent;
+                benefitText = "※ポイント " + benefitValue.toFixed(0);
+            }
+
+            let realPrice = initial - benefitValue;
+            let profit = buyback - realPrice;
+
+            document.getElementById("defaultPrice").textContent = initial;
+            document.getElementById("realPrice").textContent = realPrice;
+            document.getElementById("profit").textContent = profit;
+            document.getElementById("cardBenefit").textContent = benefitText ? benefitText : "なし";
+        }
+    </script>
+</body>
+</html>
