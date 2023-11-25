@@ -54,7 +54,7 @@
         }
 
         .flex-item {
-            flex-basis: 48%; /* 要素を横に並べるために幅を調整 */
+            flex-basis: 48%;
         }
     </style>
 </head>
@@ -76,7 +76,7 @@
     <div class="flex-container">
         <div>
             <label for="basePointPercentage">基本P率:</label>
-            <input type="number" id="basePointPercentage" placeholder="例: 8.2" value="8.2">
+            <input type="number" id="basePointPercentage" placeholder="例: 8.3" value="8.3">
         </div>
         <div>
             <label for="eventPointPercentage">eventP率:</label>
@@ -176,16 +176,17 @@
             const eventPoints = Math.min(taxExemptPrice * (eventPointPercentage / 100), pointLimit);
             const netPrice = reducedPrice - basePoints - eventPoints;
             const discountedPrice = reducedPrice;
-            const cashMinus = discountedPrice - purchasePrice;
+            const profitValue = purchasePrice - netPrice;
+            const roiValue = (profitValue / netPrice) * 100;
 
             document.getElementById("points").value = basePoints.toFixed(2);
             document.getElementById("bonusPoints").value = eventPoints.toFixed(2);
             document.getElementById("totalPoints").value = (basePoints + eventPoints).toFixed(2);
             document.getElementById("netPrice").value = netPrice.toFixed(2);
-            document.getElementById("profit").value = (purchasePrice - netPrice).toFixed(2);
-            document.getElementById("roi").value = ((purchasePrice - netPrice) / purchasePrice * 100).toFixed(2);
+            document.getElementById("profit").value = profitValue.toFixed(2);
+            document.getElementById("roi").value = roiValue.toFixed(2);
             document.getElementById("discountedPrice").value = discountedPrice.toFixed(2);
-            document.getElementById("cashMinus").value = cashMinus.toFixed(2);
+            document.getElementById("cashMinus").value = (discountedPrice - purchasePrice).toFixed(2);
         }
     </script>
 </body>
