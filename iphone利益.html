@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iPhone価格計算</title>
+  <title>iPhone価格管理表</title>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
@@ -34,6 +34,8 @@
       width: 100%;
       box-sizing: border-box;
       margin-bottom: 10px;
+      background-color: #fff;
+      color: #333;
     }
 
     @media (max-width: 600px) {
@@ -41,11 +43,15 @@
         font-size: 14px;
       }
     }
+
+    .credit-card-info {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
-  <h2 style="color: #000; font-weight: bold;">iPhone価格計算</h2>
+  <h2 style="color: #000; font-weight: bold;">iPhone価格管理表</h2>
 
   <label for="iphone-model" style="color: #000; font-weight: bold;">iPhoneモデル：</label>
   <select id="iphone-model" onchange="updatePrice()" style="background-color: #fff; color: #333;">
@@ -82,41 +88,82 @@
         <th>割引率</th>
         <th>割引価格</th>
         <th>実質価格</th>
+        <th>PayPayポイント</th>
+        <th>PayPay利用後実質価格</th>
       </tr>
     </thead>
     <tbody>
       <tr id="15pro-128GB">
         <td>15pro</td>
         <td>128GB</td>
-        <td>¥159,800</td>
+        <td>¥120,000</td>
         <td id="15pro-128GB-discount-rate">1%</td>
         <td id="15pro-128GB-discount-price">¥</td>
         <td id="15pro-128GB-discounted-price">¥</td>
+        <td id="15pro-128GB-paypay-points">0</td>
+        <td id="15pro-128GB-after-paypay-price">¥</td>
       </tr>
       <tr id="15pro-256GB" style="display: none;">
         <td>15pro</td>
         <td>256GB</td>
-        <td>¥174,800</td>
+        <td>¥130,000</td>
         <td id="15pro-256GB-discount-rate">1%</td>
         <td id="15pro-256GB-discount-price">¥</td>
         <td id="15pro-256GB-discounted-price">¥</td>
+        <td id="15pro-256GB-paypay-points">0</td>
+        <td id="15pro-256GB-after-paypay-price">¥</td>
       </tr>
       <tr id="15proMAX-256GB" style="display: none;">
         <td>15proMAX</td>
         <td>256GB</td>
-        <td>¥189,000</td>
+        <td>¥140,000</td>
         <td id="15proMAX-256GB-discount-rate">1%</td>
         <td id="15proMAX-256GB-discount-price">¥</td>
         <td id="15proMAX-256GB-discounted-price">¥</td>
+        <td id="15proMAX-256GB-paypay-points">0</td>
+        <td id="15proMAX-256GB-after-paypay-price">¥</td>
       </tr>
     </tbody>
   </table>
+
+  <div class="credit-card-info">
+    <h3 style="color: #000; font
+  <div class="credit-card-info">
+    <h3 style="color: #000; font-weight: bold;">クレジットカード情報</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>クレジットカード</th>
+          <th>ポイント</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PayPay</td>
+          <td id="paypay-points">0</td>
+        </tr>
+        <tr>
+          <td>JAL</td>
+          <td id="jal-points">0</td>
+        </tr>
+        <tr>
+          <td>ユナイテッド</td>
+          <td id="united-points">0</td>
+        </tr>
+        <tr>
+          <td>マリオット</td>
+          <td id="marriott-points">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <script>
     function updatePrice() {
       var selectedModel = document.getElementById("iphone-model").value;
       var discountRate = parseInt(document.getElementById("discount-rate").value);
-      
+      var paypayPointsUsed = parseInt(document.getElementById("paypay-points").textContent.replace(/,/g, ''));
+
       // 選択されたモデルに対応する行を表示し、他の行は非表示にする
       document.getElementById("15pro-128GB").style.display = (selectedModel === "15pro-128GB") ? "" : "none";
       document.getElementById("15pro-256GB").style.display = (selectedModel === "15pro-256GB") ? "" : "none";
@@ -126,6 +173,8 @@
       var modelDiscountRateId = selectedModel + "-discount-rate";
       var modelDiscountPriceId = selectedModel + "-discount-price";
       var modelDiscountedPriceId = selectedModel + "-discounted-price";
+      var modelPayPayPointsId = selectedModel + "-paypay-points";
+      var modelAfterPayPayPriceId = selectedModel + "-after-paypay-price";
       
       document.getElementById(modelDiscountRateId).textContent = discountRate + "%";
       
@@ -133,9 +182,23 @@
       var taxExclusivePrice = originalPrice / 1.1;
       var discountPrice = taxExclusivePrice * discountRate / 100;
       var discountedPrice = originalPrice - discountPrice;
-      
+      var afterPayPayPrice = discountedPrice - paypayPointsUsed;
+
       document.getElementById(modelDiscountPriceId).textContent = "¥" + Math.floor(discountPrice).toLocaleString();
       document.getElementById(modelDiscountedPriceId).textContent = "¥" + Math.floor(discountedPrice).toLocaleString();
+      document.getElementById(modelPayPayPointsId).textContent = paypayPointsUsed.toLocaleString();
+      document.getElementById(modelAfterPayPayPriceId).textContent = "¥" + Math.floor(afterPayPayPrice).toLocaleString();
+
+      // クレジットカードポイントの更新
+      var paypayPoints = Math.floor(originalPrice * 0.01); // 1%ポイント
+      var jalPoints = Math.floor(originalPrice * 0.02); // 2%ポイント
+      var unitedPoints = Math.floor(originalPrice * 0.015); // 1.5%ポイント
+      var marriottPoints = Math.floor(originalPrice * 0.005); // 0.5%ポイント
+
+      document.getElementById("paypay-points").textContent = paypayPoints.toLocaleString();
+      document.getElementById("jal-points").textContent = jalPoints.toLocaleString();
+      document.getElementById("united-points").textContent = unitedPoints.toLocaleString();
+      document.getElementById("marriott-points").textContent = marriottPoints.toLocaleString();
     }
   </script>
 
