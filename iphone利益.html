@@ -148,8 +148,11 @@
       </tbody>
     </table>
 
-    <!-- Removed the PayPayポイント and PayPay利用後実質価格 sections -->
-
+    <!-- 新しいPayPayカード支払いと実質価格のセクション -->
+    <div style="margin-top: 20px;">
+        <h3 style="color: #000; font-weight: bold;">PayPayカードで支払ったら</h3>
+        <p>実質価格: ¥<span id="paypay-effective-price">0</span></p>
+    </div>
   </div>
 
   <script>
@@ -159,7 +162,8 @@
       var paypayPointsUsed = parseInt(document.getElementById("paypay-points").textContent.replace(/,/g, ''));
 
       // 選択されたモデルに対応する行を表示し、他の行は非表示にする
-      document.getElementById("15pro-128GB").style.display = (selectedModel === "15pro-128GB") ? "" : "none";
+      document.getElementById("15pro-128GB").style
+.display = (selectedModel === "15pro-128GB") ? "" : "none";
       document.getElementById("15pro-256GB").style.display = (selectedModel === "15pro-256GB") ? "" : "none";
       document.getElementById("15proMAX-256GB").style.display =
       (selectedModel === "15proMAX-256GB") ? "" : "none";
@@ -190,6 +194,10 @@
       document.getElementById("jal-points").textContent = jalPoints.toLocaleString();
       document.getElementById("united-points").textContent = unitedPoints.toLocaleString();
       document.getElementById("marriott-points").textContent = marriottPoints.toLocaleString();
+
+      // PayPayカードで支払った場合の実質価格の更新
+      var paypayEffectivePrice = discountedPrice - (originalPrice * 0.02);
+      document.getElementById("paypay-effective-price").textContent = Math.floor(paypayEffectivePrice).toLocaleString();
     }
   </script>
 
