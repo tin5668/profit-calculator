@@ -1,119 +1,143 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iPhone 計算ツール</title>
-    <style>
-        body {
-            font-family: 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iPhone価格計算</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      margin: 20px;
+      background-color: #f8f8f8;
+      color: #333;
+    }
 
-        h1, h2, p {
-            text-align: center;
-            margin: 20px 0;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
 
-        label, select, input, button {
-           display: block;
-    width: 90%;
-    max-width: 400px;
-    margin: 15px auto;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px; /* フォントサイズを大きくする */
-    box-sizing: border-box;
-        }
-        
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
 
-        button {
-            background-color: #007AFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    th {
+      background-color: #f2f2f2;
+    }
 
-        button:hover {
-            background-color: #0058D0;
-        }
-select {
-    appearance: none; 
-    background-color: #fff;
-    cursor: pointer;
-    </style>
+    select {
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>iPhone 計算ツール</h1>
 
-    <label for="iphoneModel">iPhoneモデル:</label>
-    <select id="iphoneModel">
-        <option value="15pro128">15pro128</option>
-        <option value="15pro256">15pro256</option>
-        <option value="15proMAX256">15proMAX256</option>
-    </select>
+  <h2 style="color: #000; font-weight: bold;">iPhone価格計算</h2>
 
-    <label for="creditCard">使用するクレジットカード:</label>
-    <select id="creditCard">
-        <option value="none">--選択してください--</option>
-        <option value="マイレージセゾンプラチナ">マイレージセゾンプラチナ</option>
-        <option value="PAYPAYカードゴールド">PAYPAYカードゴールド</option>
-        <option value="ジャックスプラチナ">ジャックスプラチナ</option>
-        <option value="マリオットカード">マリオットカード</option>
-    </select>
+  <label for="iphone-model" style="color: #000; font-weight: bold;">iPhoneモデル：</label>
+  <select id="iphone-model" onchange="updatePrice()" style="background-color: #fff; color: #333;">
+    <option value="15pro-128GB">15pro 128GB</option>
+    <option value="15pro-256GB">15pro 256GB</option>
+    <option value="15proMAX-256GB">15proMAX 256GB</option>
+  </select>
 
-    <label for="buybackPrice">買取価格 (¥):</label>
-    <input type="number" id="buybackPrice" placeholder="例: 120000">
+  <label for="discount-rate" style="color: #000; font-weight: bold;">割引率：</label>
+  <select id="discount-rate" onchange="updatePrice()" style="background-color: #fff; color: #333;">
+    <option value="1">1%</option>
+    <option value="2">2%</option>
+    <option value="3">3%</option>
+    <option value="4">4%</option>
+    <option value="5">5%</option>
+    <option value="6">6%</option>
+    <option value="7">7%</option>
+    <option value="8">8%</option>
+    <option value="9">9%</option>
+    <option value="10">10%</option>
+    <option value="11">11%</option>
+    <option value="12">12%</option>
+    <option value="13">13%</option>
+    <option value="14">14%</option>
+    <option value="15">15%</option>
+  </select>
 
-    <button onclick="calculate()">計算</button>
+  <table>
+    <thead>
+      <tr>
+        <th>モデル</th>
+        <th>容量</th>
+        <th>価格</th>
+        <th>割引率</th>
+        <th>割引価格</th>
+        <th>実質価格</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="15pro-128GB">
+        <td>15pro</td>
+        <td>128GB</td>
+        <td>¥159,800</td>
+        <td id="15pro-128GB-discount-rate">1%</td>
+        <td id="15pro-128GB-discount-price">¥</td>
+        <td id="15pro-128GB-discounted-price">¥</td>
+      </tr>
+      <tr id="15pro-256GB" style="display: none;">
+        <td>15pro</td>
+        <td>256GB</td>
+        <td>¥174,800</td>
+        <td id="15pro-256GB-discount-rate">1%</td>
+        <td id="15pro-256GB-discount-price">¥</td>
+        <td id="15pro-256GB-discounted-price">¥</td>
+      </tr>
+      <tr id="15proMAX-256GB" style="display: none;">
+        <td>15proMAX</td>
+        <td>256GB</td>
+        <td>¥189,000</td>
+        <td id="15proMAX-256GB-discount-rate">1%</td>
+        <td id="15proMAX-256GB-discount-price">¥</td>
+        <td id="15proMAX-256GB-discounted-price">¥</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <h2>結果:</h2>
-    <p>定価: <span id="defaultPrice">159800</span> ¥</p>
-    <p>実質価格: <span id="realPrice">0</span> ¥</p>
-    <p>利益: <span id="profit">0</span> ¥</p>
-    <p>クレジットカード特典: <span id="cardBenefit">-</span></p>
+  <script>
+    function updatePrice() {
+      var selectedModel = document.getElementById("iphone-model").value;
+      var discountRate = parseInt(document.getElementById("discount-rate").value);
+      
+      // 選択されたモデルに対応する行を表示し、他の行は非表示にする
+      document.getElementById("15pro-128GB").style.display = (selectedModel === "15pro-128GB") ? "" : "none";
+      document.getElementById("15pro-256GB").style.display = (selectedModel === "15pro-256GB") ? "" : "none";
+      document.getElementById("15proMAX-256GB").style.display = (selectedModel === "15proMAX-256GB") ? "" : "none";
 
-    <script>
-        const modelPrices = {
-            "15pro128": 159800,
-            "15pro256": 174800,
-            "15proMAX256": 189800
-        };
+      // 選択されたモデルの割引率、割引価格、実質価格を更新
+      var modelDiscountRateId = selectedModel + "-discount-rate";
+      var modelDiscountPriceId = selectedModel + "-discount-price";
+      var modelDiscountedPriceId = selectedModel + "-discounted-price";
+      
+      document.getElementById(modelDiscountRateId).textContent = discountRate + "%";
+      
+      var originalPrice = parseInt(document.getElementById(selectedModel).getElementsByTagName("td")[2].textContent.slice(1).replace(/,/g, ''));
+      var taxExclusivePrice = originalPrice / 1.1;
+      var discountPrice = taxExclusivePrice * discountRate / 100;
+      var discountedPrice = originalPrice - discountPrice;
+      
+      document.getElementById(modelDiscountPriceId).textContent = "¥" + Math.floor(discountPrice).toLocaleString();
+      document.getElementById(modelDiscountedPriceId).textContent = "¥" + Math.floor(discountedPrice).toLocaleString();
+    }
+  </script>
 
-        function calculate() {
-            let model = document.getElementById("iphoneModel").value;
-            let card = document.getElementById("creditCard").value;
-            let initial = modelPrices[model];
-            let benefitPercent = 0;
-            let benefitValue = 0;
-            let benefitText = "";
-            let buyback = parseFloat(document.getElementById("buybackPrice").value) || 0;
-
-            if (card === "マイレージセゾンプラチナ") {
-                benefitPercent = 0.015;
-                benefitValue = initial * benefitPercent;
-                benefitText = "※マイル " + benefitValue.toFixed(0);
-            } else if (card === "PAYPAYカードゴールド") {
-                benefitPercent = 0.02;
-                benefitValue = initial * benefitPercent;
-                benefitText = "※ポイント " + benefitValue.toFixed(0);
-            } else if (card === "ジャックスプラチナ") {
-                benefitPercent = 0.015;
-                benefitValue = initial * benefitPercent;
-                benefitText = "※ポイント " + benefitValue.toFixed(0);
-            }
-
-            let realPrice = initial - benefitValue;
-            let profit = buyback - realPrice;
-
-            document.getElementById("defaultPrice").textContent = initial;
-            document.getElementById("realPrice").textContent = realPrice;
-            document.getElementById("profit").textContent = profit;
-            document.getElementById("cardBenefit").textContent = benefitText ? benefitText : "なし";
-        }
-    </script>
 </body>
 </html>
