@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iPhone価格管理表</title>
+  <title>iPhone価格計算</title>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
@@ -51,7 +51,7 @@
 </head>
 <body>
 
-  <h2 style="color: #000; font-weight: bold;">iPhone価格管理表</h2>
+  <h2 style="color: #000; font-weight: bold;">iPhone価格計算</h2>
 
   <label for="iphone-model" style="color: #000; font-weight: bold;">iPhoneモデル：</label>
   <select id="iphone-model" onchange="updatePrice()" style="background-color: #fff; color: #333;">
@@ -88,46 +88,36 @@
         <th>割引率</th>
         <th>割引価格</th>
         <th>実質価格</th>
-        <th>PayPayポイント</th>
-        <th>PayPay利用後実質価格</th>
       </tr>
     </thead>
     <tbody>
       <tr id="15pro-128GB">
         <td>15pro</td>
         <td>128GB</td>
-        <td>¥120,000</td>
+        <td>¥159,800</td>
         <td id="15pro-128GB-discount-rate">1%</td>
         <td id="15pro-128GB-discount-price">¥</td>
         <td id="15pro-128GB-discounted-price">¥</td>
-        <td id="15pro-128GB-paypay-points">0</td>
-        <td id="15pro-128GB-after-paypay-price">¥</td>
       </tr>
       <tr id="15pro-256GB" style="display: none;">
         <td>15pro</td>
         <td>256GB</td>
-        <td>¥130,000</td>
+        <td>¥174,800</td>
         <td id="15pro-256GB-discount-rate">1%</td>
         <td id="15pro-256GB-discount-price">¥</td>
         <td id="15pro-256GB-discounted-price">¥</td>
-        <td id="15pro-256GB-paypay-points">0</td>
-        <td id="15pro-256GB-after-paypay-price">¥</td>
       </tr>
       <tr id="15proMAX-256GB" style="display: none;">
         <td>15proMAX</td>
         <td>256GB</td>
-        <td>¥140,000</td>
+        <td>¥189,800</td>
         <td id="15proMAX-256GB-discount-rate">1%</td>
         <td id="15proMAX-256GB-discount-price">¥</td>
         <td id="15proMAX-256GB-discounted-price">¥</td>
-        <td id="15proMAX-256GB-paypay-points">0</td>
-        <td id="15proMAX-256GB-after-paypay-price">¥</td>
       </tr>
     </tbody>
   </table>
 
-  <div class="credit-card-info">
-    <h3 style="color: #000; font
   <div class="credit-card-info">
     <h3 style="color: #000; font-weight: bold;">クレジットカード情報</h3>
     <table>
@@ -158,6 +148,32 @@
     </table>
   </div>
 
+  <p style="color: #000; font-weight: bold; margin-top: 20px;">paypayカードゴールドを使用したら</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>PayPayポイント</th>
+        <th>PayPay利用後実質価格</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="15pro-128GB-paypay-info">
+        <td id="15pro-128GB-paypay-points">0</td>
+        <td id="15pro-128GB-after-paypay-price">¥</td>
+      </tr>
+      <tr id="15pro-256GB-paypay-info" style="display: none;">
+        <td id="15pro-256GB-paypay-points">0</td>
+        <td id="15pro-256GB-after-paypay-price">¥</td>
+      </tr>
+      <tr id="15proMAX-256GB-paypay-info" style="display: none;">
+        <td id="15proMAX
+-256GB-paypay-points">0</td>
+<td id="15proMAX-256GB-after-paypay-price">¥</td>
+</tr>
+</tbody>
+
+  </table>
   <script>
     function updatePrice() {
       var selectedModel = document.getElementById("iphone-model").value;
@@ -190,10 +206,10 @@
       document.getElementById(modelAfterPayPayPriceId).textContent = "¥" + Math.floor(afterPayPayPrice).toLocaleString();
 
       // クレジットカードポイントの更新
-      var paypayPoints = Math.floor(originalPrice * 0.01); // 1%ポイント
-      var jalPoints = Math.floor(originalPrice * 0.02); // 2%ポイント
+      var paypayPoints = Math.floor(originalPrice * 0.02); // 2%ポイント
+      var jalPoints = Math.floor(originalPrice * 0.01); // 1%ポイント
       var unitedPoints = Math.floor(originalPrice * 0.015); // 1.5%ポイント
-      var marriottPoints = Math.floor(originalPrice * 0.005); // 0.5%ポイント
+      var marriottPoints = Math.floor(originalPrice * 0.03); // 3%ポイント
 
       document.getElementById("paypay-points").textContent = paypayPoints.toLocaleString();
       document.getElementById("jal-points").textContent = jalPoints.toLocaleString();
@@ -201,6 +217,5 @@
       document.getElementById("marriott-points").textContent = marriottPoints.toLocaleString();
     }
   </script>
-
 </body>
 </html>
