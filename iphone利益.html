@@ -80,6 +80,9 @@
     <option value="15">15%</option>
   </select>
 
+  <label for="trade-in-price" style="color: #000; font-weight: bold;">買取価格：</label>
+  <input type="text" id="trade-in-price" oninput="updatePrice()" style="padding: 8px; width: 100%; box-sizing: border-box; margin-bottom: 10px; background-color: #fff; color: #333;">
+
   <table>
     <thead>
       <tr>
@@ -118,7 +121,15 @@
       </tr>
     </tbody>
   </table>
+  <!-- 新しい欄のセクション -->
+    <div style="margin-top: 20
+    <!-- 新しい欄のセクション -->
+    <div style="margin-top: 20px;">
+        <h3 style="color: #000; font-weight: bold;">買取価格と利益</h3>
+        <p>買取価格: ¥<span id="trade-in-price-display">0</span></p>
+        <p>利益: ¥<span id="profit" style="color: red;">0</span></p>
 
+    </div>
   <div class="credit-card-info">
     <h3 style="color: #000; font-weight: bold;">クレジットカード情報</h3>
     <table>
@@ -153,6 +164,8 @@
         <h3 style="color: #000; font-weight: bold;">PayPayカードで支払ったら</h3>
         <p>実質価格: ¥<span id="paypay-effective-price">0</span></p>
     </div>
+
+    
   </div>
 
   <script>
@@ -160,13 +173,12 @@
       var selectedModel = document.getElementById("iphone-model").value;
       var discountRate = parseInt(document.getElementById("discount-rate").value);
       var paypayPointsUsed = parseInt(document.getElementById("paypay-points").textContent.replace(/,/g, ''));
+      var tradeInPrice = parseInt(document.getElementById("trade-in-price").value.replace(/,/g, '')) || 0;
 
       // 選択されたモデルに対応する行を表示し、他の行は非表示にする
-      document.getElementById("15pro-128GB").style
-.display = (selectedModel === "15pro-128GB") ? "" : "none";
+      document.getElementById("15pro-128GB").style.display = (selectedModel === "15pro-128GB") ? "" : "none";
       document.getElementById("15pro-256GB").style.display = (selectedModel === "15pro-256GB") ? "" : "none";
-      document.getElementById("15proMAX-256GB").style.display =
-      (selectedModel === "15proMAX-256GB") ? "" : "none";
+      document.getElementById("15proMAX-256GB").style.display = (selectedModel === "15proMAX-256GB") ? "" : "none";
 
       // 選択されたモデルの割引率、割引価格、実質価格を更新
       var modelDiscountRateId = selectedModel + "-discount-rate";
@@ -198,6 +210,11 @@
       // PayPayカードで支払った場合の実質価格の更新
       var paypayEffectivePrice = discountedPrice - (originalPrice * 0.02);
       document.getElementById("paypay-effective-price").textContent = Math.floor(paypayEffectivePrice).toLocaleString();
+
+      // 新しい欄の更新
+      document.getElementById("trade-in-price-display").textContent = Math.floor(tradeInPrice).toLocaleString();
+      var profit = Math.floor(tradeInPrice - discountedPrice);
+      document.getElementById("profit").textContent = profit.toLocaleString();
     }
   </script>
 
