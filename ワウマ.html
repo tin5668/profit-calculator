@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ワウマ利益計算ツール</title>
     <style>
@@ -31,7 +30,6 @@
             color: white;
             border: none;
             transition: background-color 0.3s;
-            margin-bottom: 40px;  /* 例: 40pxのマージンを追加。必要に応じてこの値を調整することで間隔を変更できます。 */
         }
 
         button:hover {
@@ -49,29 +47,15 @@
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
+
         .flex-container {
             display: flex;
             justify-content: space-between;
         }
 
-        .flex-container > div {
-            width: 48%; /* 少し小さくして余白を作る */
+        .flex-item {
+            flex-basis: 48%;
         }
-        .flex-container {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .flex-container > div {
-            width: 32%; /* 3つの要素が均等に配置されるように32%に変更 */
-        }
-        .flex-container {
-        display: flex;
-        justify-content: space-between;
-    }
-    .flex-item {
-        flex-basis: 33%;
-    }
     </style>
 </head>
 
@@ -92,16 +76,16 @@
     <div class="flex-container">
         <div>
             <label for="basePointPercentage">基本P率:</label>
-            <input type="number" id="basePointPercentage" placeholder="例: 8.3" value="8.3">
+            <input type="number" id="basePointPercentage" placeholder="例: 1" value="1">
         </div>
         <div>
-            <label for="eventPointPercentage">eventP率:</label>
+            <label for="eventPointPercentage">ポイントサイト:</label>
             <input type="number" id="eventPointPercentage" placeholder="例: 5">
         </div>
         <div>
-        <label for="pointLimit">eventP(限):</label>
-        <input type="number" id="pointLimit" placeholder="例: 1000">
-    </div>
+            <label for="pointLimit">eventP(限):</label>
+            <input type="number" id="pointLimit" placeholder="例: 1000">
+        </div>
     </div>
 
     <div class="flex-container">
@@ -114,78 +98,76 @@
             <input type="number" id="couponPercentage" placeholder="例: 10" value="0">
         </div>
     </div>
-    <h2>買取リンク</h2>
- 
 
+    <h2>買取リンク</h2>
     <div>
          <a href="https://store.shopping.yahoo.co.jp/sokuteikiya/4902370548495.html?sc_i=shp_pc_search_itemlist_shsrg_img" target="_blank">ヤフショスイッチ</a>
         <span> | </span>
         <a href="https://www.morimori-kaitori.jp/search/4902370548495?sk=4902370548495" target="_blank">森森パンダ</a>
         &nbsp;|&nbsp;
-        <a href="https://www.morimori-kaitori.jp/search/4902370548501?sk=4902370548501" target="_blank">森森ネオン</a>
-        
+        <a href="https://www.kaitorishouten-co.jp/category/2/71" target="_blank">商店スイッチ</a>
     </div>
-
-  
-   
 
     <button onclick="calculate()">計算</button>
 
     <div class="flex-container">
-    <div class="flex-item">
-        <label for="points">基本P:</label>
-        <input type="number" id="points" readonly>
-    </div>
-    <div class="flex-item">
-        <label for="bonusPoints">eventP:</label>
-        <input type="number" id="bonusPoints" readonly>
-    </div>
-    <div class="flex-item">
-        <label for="totalPoints">total P:</label>
-        <input type="number" id="totalPoints" readonly>
-    </div>
-</div>
-  <div style="display: flex; justify-content: space-between;">
-    <div style="flex: 1;">
-        <label for="netPrice" style="display: inline-block; vertical-align: middle;">実質価格:</label>
-        <input type="number" id="netPrice" readonly style="display: inline-block; vertical-align: middle;">
+        <div class="flex-item">
+            <label for="points">基本P:</label>
+            <input type="number" id="points" readonly="">
+        </div>
+        <div class="flex-item">
+            <label for="bonusPoints">eventP:</label>
+            <input type="number" id="bonusPoints" readonly="">
+        </div>
+        <div class="flex-item">
+            <label for="totalPoints">total P:</label>
+            <input type="number" id="totalPoints" readonly="">
+        </div>
     </div>
 
-    <div style="flex: 1;">
-        <label for="profit" style="display: inline-block; vertical-align: middle;">利益額:</label>
-        <input type="number" id="profit" readonly style="display: inline-block; vertical-align: middle;">
+    <div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1;">
+            <label for="netPrice">実質価格:</label>
+            <input type="number" id="netPrice" readonly="" style="display: inline-block; vertical-align: middle;">
+        </div>
+
+        <div style="flex: 1;">
+            <label for="profit">利益額:</label>
+            <input type="number" id="profit" readonly="" style="display: inline-block; vertical-align: middle;">
+        </div>
+
+        <div style="flex: 1;">
+            <label for="roi">ROI (%):</label>
+            <input type="number" id="roi" readonly="" style="display: inline-block; vertical-align: middle;">
+        </div>
     </div>
 
-    <div style="flex: 1;">
-        <label for="roi" style="display: inline-block; vertical-align: middle;">ROI (%):</label>
-        <input type="number" id="roi" readonly style="display: inline-block; vertical-align: middle;">
+    <!-- 支払い金額と現金マイナス分のセクション -->
+    <div class="flex-container">
+        <div class="flex-item">
+            <label for="discountedPrice">支払い金額:</label>
+            <input type="number" id="discountedPrice" readonly="">
+        </div>
+        <div class="flex-item">
+            <label for="cashMinus">現金マイナス分:</label>
+            <input type="number" id="cashMinus" readonly="">
+        </div>
     </div>
-</div>
 
     <script>
         function calculate() {
             const price = parseFloat(document.getElementById("price").value);
-            if (isNaN(price)) {
-                alert("価格を正しく入力してください。");
-                return;
-            }
-
+            const purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
             const pointPercentage = parseFloat(document.getElementById("basePointPercentage").value);
-            if (isNaN(pointPercentage)) {
-                alert("基本ポイント率を正しく入力してください。");
-                return;
-            }
-
             const eventPointPercentage = parseFloat(document.getElementById("eventPointPercentage").value || 0);
             const pointLimit = parseFloat(document.getElementById("pointLimit").value || Infinity);
-            const purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
-            if (isNaN(purchasePrice)) {
-                alert("買取価格を正しく入力してください。");
-                return;
-            }
-
             const couponYen = parseFloat(document.getElementById("couponYen").value || 0);
             const couponPercentage = parseFloat(document.getElementById("couponPercentage").value || 0);
+
+            if (isNaN(price) || isNaN(purchasePrice) || isNaN(pointPercentage)) {
+                alert("必要な値をすべて入力してください。");
+                return;
+            }
 
             const couponDiscountFromPercentage = price * (couponPercentage / 100);
             const reducedPrice = price - couponYen - couponDiscountFromPercentage;
@@ -193,38 +175,18 @@
             const basePoints = taxExemptPrice * (pointPercentage / 100);
             const eventPoints = Math.min(taxExemptPrice * (eventPointPercentage / 100), pointLimit);
             const netPrice = reducedPrice - basePoints - eventPoints;
+            const discountedPrice = reducedPrice;
+            const profitValue = purchasePrice - netPrice;
+            const roiValue = (profitValue / netPrice) * 100;
 
             document.getElementById("points").value = basePoints.toFixed(2);
             document.getElementById("bonusPoints").value = eventPoints.toFixed(2);
-            const totalPointsValue = basePoints + eventPoints;
-document.getElementById("totalPoints").value = totalPointsValue.toFixed(2);
-
+            document.getElementById("totalPoints").value = (basePoints + eventPoints).toFixed(2);
             document.getElementById("netPrice").value = netPrice.toFixed(2);
-
-            const profitValue = purchasePrice - netPrice;
             document.getElementById("profit").value = profitValue.toFixed(2);
-            
-            if (purchasePrice !== 0) {
-                const roiValue = (profitValue / purchasePrice) * 100;
-                document.getElementById("roi").value = roiValue.toFixed(2);
-            } else {
-                document.getElementById("roi").value = "∞";  // 0で除算した場合の無限大を表示
-            }
-            // ポイントの計算処理
-const basePointInput = document.getElementById('basePoint');
-const eventPointInput = document.getElementById('eventPoint');
-const totalPointInput = document.getElementById('totalPoint');
-
-basePointInput.addEventListener('input', updateTotalPoint);
-eventPointInput.addEventListener('input', updateTotalPoint);
-
-function updateTotalPoint() {
-    const basePoint = parseFloat(basePointInput.value) || 0;
-    const eventPoint = parseFloat(eventPointInput.value) || 0;
-    const totalPoint = basePoint + eventPoint;
-    totalPointInput.value = totalPoint;
-}
-
+            document.getElementById("roi").value = roiValue.toFixed(2);
+            document.getElementById("discountedPrice").value = discountedPrice.toFixed(2);
+            document.getElementById("cashMinus").value = (discountedPrice - purchasePrice).toFixed(2);
         }
     </script>
 </body>
