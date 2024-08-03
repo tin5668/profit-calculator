@@ -1,193 +1,172 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ワウマ利益計算ツール</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワウマ計算式</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            padding: 10px;
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
             background-color: #f7f7f7;
+        }
+        h1 {
+            text-align: center;
             color: #333;
         }
-
-        div {
-            margin-bottom: 20px;
+        .input-group, .output-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-
-        label, input, button {
+        label {
+            margin-top: 10px;
+            color: #555;
+        }
+        input {
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            font-size: 16px;
+            padding: 10px;
+            margin-top: 5px;
             border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
-
         button {
-            cursor: pointer;
-            background-color: #400080;
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007BFF;
             color: white;
             border: none;
-            transition: background-color 0.3s;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
         }
-
         button:hover {
-            background-color: #330066;
+            background-color: #0056b3;
         }
-
-        input[readonly] {
-            background-color: #f3f3f3;
+        h2 {
+            margin-top: 20px;
+            color: #333;
         }
-
-        h1 {
-            font-size: 24px;
-            color: #400080;
-            border-bottom: 2px solid #400080;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .flex-item {
-            flex-basis: 48%;
+        .output {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
-
 <body>
-    <h1>ワウマ利益計算ツール</h1>
 
-    <div class="flex-container">
+    <h1>ワウマ計算式</h1>
+
+    <!-- 1段目: ①②③④ -->
+    <div class="input-group">
         <div>
-            <label for="price">価格:</label>
-            <input type="number" id="price" placeholder="例: 1100">
+            <label for="price">① 価格（円）:</label>
+            <input type="number" id="price" placeholder="例: 1000">
         </div>
         <div>
-            <label for="purchasePrice">買取価格:</label>
-            <input type="number" id="purchasePrice" placeholder="例: 1500">
+            <label for="quantity">② 商品数:</label>
+            <input type="number" id="quantity" placeholder="例: 10">
+        </div>
+        <div>
+            <label for="pointsEarnedRate">③ ポイント取得（円）:</label>
+            <input type="number" id="pointsEarnedRate" placeholder="例: 100">
+        </div>
+        <div>
+            <label for="pSiteRate">④ Pサイト率（％）:</label>
+            <input type="number" id="pSiteRate" placeholder="例: 5">
         </div>
     </div>
 
-    <div class="flex-container">
+    <!-- 2段目: ⑤⑥⑦ -->
+    <div class="input-group">
         <div>
-            <label for="basePointPercentage">基本P率:</label>
-            <input type="number" id="basePointPercentage" placeholder="例: 1" value="1">
-        </div>
-        <div>
-            <label for="eventPointPercentage">Pサイト:</label>
-            <input type="number" id="eventPointPercentage" placeholder="例: 5">
+            <label for="coupon">⑤ クーポン（円）:</label>
+            <input type="number" id="coupon" placeholder="例: 500">
         </div>
         <div>
-            <label for="pointLimit">eventP(限):</label>
-            <input type="number" id="pointLimit" placeholder="例: 1000">
-        </div>
-    </div>
-
-    <div class="flex-container">
-        <div>
-            <label for="couponYen">ｸｰﾎﾟﾝ(円):</label>
-            <input type="number" id="couponYen" placeholder="例: 100" value="0">
+            <label for="pointsUsed">⑥ P使用（円）:</label>
+            <input type="number" id="pointsUsed" placeholder="例: 200">
         </div>
         <div>
-            <label for="couponPercentage">ｸｰﾎﾟﾝ(%):</label>
-            <input type="number" id="couponPercentage" placeholder="例: 10" value="0">
+            <label for="resaleValue">⑦ 買取1台（円）:</label>
+            <input type="number" id="resaleValue" placeholder="例: 1500">
         </div>
     </div>
 
-    <h2>買取リンク</h2>
-    <div>
-         <a href="https://store.shopping.yahoo.co.jp/sokuteikiya/4902370548495.html?sc_i=shp_pc_search_itemlist_shsrg_img" target="_blank">ヤフショスイッチ</a>
-        <span> | </span>
-        <a href="https://www.morimori-kaitori.jp/search/4902370548495?sk=4902370548495" target="_blank">森森パンダ</a>
-        &nbsp;|&nbsp;
-        <a href="https://www.kaitorishouten-co.jp/category/2/71" target="_blank">商店スイッチ</a>
+    <!-- 計算ボタン -->
+    <button onclick="calculateProfit()">計算する</button>
+
+    <!-- 3段目: ⑧⑨⑩ -->
+    <h2>結果</h2>
+    <div class="output-group">
+        <div class="output">⑧ 価格合計: <span id="totalPrice"></span> 円</div>
+        <div class="output">⑨ 決済額: <span id="finalPayment"></span> 円</div>
+        <div class="output">⑩ ポイント引き分: <span id="pointsDiff"></span> 円</div>
     </div>
 
-    <button onclick="calculate()">計算</button>
-
-    <div class="flex-container">
-        <div class="flex-item">
-            <label for="points">基本P:</label>
-            <input type="number" id="points" readonly="">
-        </div>
-        <div class="flex-item">
-            <label for="bonusPoints">eventP:</label>
-            <input type="number" id="bonusPoints" readonly="">
-        </div>
-        <div class="flex-item">
-            <label for="totalPoints">total P:</label>
-            <input type="number" id="totalPoints" readonly="">
-        </div>
+    <!-- 4段目: ⑪⑫ -->
+    <div class="output-group">
+        <div class="output">⑪ ポイントサイト: <span id="pSitePoints"></span> 円</div>
+        <div class="output">⑫ ポイント合計: <span id="totalPoints"></span> 円</div>
     </div>
 
-    <div style="display: flex; justify-content: space-between;">
-        <div style="flex: 1;">
-            <label for="netPrice">実質価格:</label>
-            <input type="number" id="netPrice" readonly="" style="display: inline-block; vertical-align: middle;">
-        </div>
-
-        <div style="flex: 1;">
-            <label for="profit">利益額:</label>
-            <input type="number" id="profit" readonly="" style="display: inline-block; vertical-align: middle;">
-        </div>
-
-        <div style="flex: 1;">
-            <label for="roi">ROI (%):</label>
-            <input type="number" id="roi" readonly="" style="display: inline-block; vertical-align: middle;">
-        </div>
+    <!-- 5段目: ⑬⑭ -->
+    <div class="output-group">
+        <div class="output">⑬ 実質総額: <span id="netTotal"></span> 円</div>
+        <div class="output">⑭ 買取総額: <span id="totalResale"></span> 円</div>
     </div>
 
-    <!-- 支払い金額と現金マイナス分のセクション -->
-    <div class="flex-container">
-        <div class="flex-item">
-            <label for="discountedPrice">支払い金額:</label>
-            <input type="number" id="discountedPrice" readonly="">
-        </div>
-        <div class="flex-item">
-            <label for="cashMinus">現金マイナス分:</label>
-            <input type="number" id="cashMinus" readonly="">
-        </div>
+    <!-- 6段目: ⑮⑯ -->
+    <div class="output-group">
+        <div class="output">⑮ 合計利益: <span id="totalProfit"></span> 円</div>
+        <div class="output">⑯ ROI: <span id="roi"></span> %</div>
     </div>
 
+    <!-- JavaScript部分 -->
     <script>
-        function calculate() {
-            const price = parseFloat(document.getElementById("price").value);
-            const purchasePrice = parseFloat(document.getElementById("purchasePrice").value);
-            const pointPercentage = parseFloat(document.getElementById("basePointPercentage").value);
-            const eventPointPercentage = parseFloat(document.getElementById("eventPointPercentage").value || 0);
-            const pointLimit = parseFloat(document.getElementById("pointLimit").value || Infinity);
-            const couponYen = parseFloat(document.getElementById("couponYen").value || 0);
-            const couponPercentage = parseFloat(document.getElementById("couponPercentage").value || 0);
+        function calculateProfit() {
+            // 入力値を取得
+            let price = parseFloat(document.getElementById('price').value) || 0;
+            let quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            let pointsEarnedRate = parseFloat(document.getElementById('pointsEarnedRate').value) || 0;
+            let pSiteRate = parseFloat(document.getElementById('pSiteRate').value) || 0;
+            let coupon = parseFloat(document.getElementById('coupon').value) || 0;
+            let pointsUsed = parseFloat(document.getElementById('pointsUsed').value) || 0;
+            let resaleValue = parseFloat(document.getElementById('resaleValue').value) || 0;
 
-            if (isNaN(price) || isNaN(purchasePrice) || isNaN(pointPercentage)) {
-                alert("必要な値をすべて入力してください。");
-                return;
-            }
+            // 計算
+            let totalPrice = price * quantity; // ⑧ 価格合計
+            let finalPayment = totalPrice - coupon; // ⑨ 決済額
+            let pointsDiff = finalPayment - pointsEarnedRate; // ⑩ ポイント引き分
+            let pSitePoints = totalPrice * (pSiteRate / 100); // ⑪ ポイントサイト
+            let totalPoints = pointsEarnedRate + pSitePoints; // ⑫ ポイント合計
+            let netTotal = finalPayment - totalPoints; // ⑬ 実質総額
+            let totalResale = quantity * resaleValue; // ⑭ 買取総額
+            let totalProfit = totalResale - netTotal; // ⑮ 合計利益
+            let roi = (totalProfit / netTotal) * 100; // ⑯ ROI
 
-            const couponDiscountFromPercentage = price * (couponPercentage / 100);
-            const reducedPrice = price - couponYen - couponDiscountFromPercentage;
-            const taxExemptPrice = reducedPrice / 1.1;
-            const basePoints = taxExemptPrice * (pointPercentage / 100);
-            const eventPoints = Math.min(taxExemptPrice * (eventPointPercentage / 100), pointLimit);
-            const netPrice = reducedPrice - basePoints - eventPoints;
-            const discountedPrice = reducedPrice;
-            const profitValue = purchasePrice - netPrice;
-            const roiValue = (profitValue / netPrice) * 100;
-
-            document.getElementById("points").value = basePoints.toFixed(2);
-            document.getElementById("bonusPoints").value = eventPoints.toFixed(2);
-            document.getElementById("totalPoints").value = (basePoints + eventPoints).toFixed(2);
-            document.getElementById("netPrice").value = netPrice.toFixed(2);
-            document.getElementById("profit").value = profitValue.toFixed(2);
-            document.getElementById("roi").value = roiValue.toFixed(2);
-            document.getElementById("discountedPrice").value = discountedPrice.toFixed(2);
-            document.getElementById("cashMinus").value = (discountedPrice - purchasePrice).toFixed(2);
+            // 結果を表示
+            document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+            document.getElementById('finalPayment').textContent = finalPayment.toFixed(2);
+            document.getElementById('pointsDiff').textContent = pointsDiff.toFixed(2);
+            document.getElementById('pSitePoints').textContent = pSitePoints.toFixed(2);
+            document.getElementById('totalPoints').textContent = totalPoints.toFixed(2);
+            document.getElementById('netTotal').textContent = netTotal.toFixed(2);
+            document.getElementById('totalResale').textContent = totalResale.toFixed(2);
+            document.getElementById('totalProfit').textContent = totalProfit.toFixed(2);
+            document.getElementById('roi').textContent = roi.toFixed(2);
         }
     </script>
+
 </body>
 </html>
