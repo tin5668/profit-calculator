@@ -61,44 +61,54 @@
             border-radius: 5px;
             border: 1px solid #ddd;
         }
+        .highlight-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: red;
+        }
     </style>
 </head>
 <body>
 
     <h1>ワウマ計算式</h1>
 
-    <!-- 1段目: ①②③④ -->
+    <!-- 1段目: 価格、商品数、ポイント取得、Pサイト率 -->
     <div class="input-group">
         <div>
-            <label for="price">① 価格（円）:</label>
+            <label for="price">価格（円）:</label>
             <input type="number" id="price" placeholder="例: 1000">
         </div>
         <div>
-            <label for="quantity">② 商品数:</label>
+            <label for="quantity">商品数:</label>
             <input type="number" id="quantity" placeholder="例: 10">
         </div>
         <div>
-            <label for="pointsEarnedRate">③ ポイント取得（円）:</label>
+            <label for="pointsEarnedRate">ポイント取得（円）:</label>
             <input type="number" id="pointsEarnedRate" placeholder="例: 100">
         </div>
         <div>
-            <label for="pSiteRate">④ Pサイト率（％）:</label>
+            <label for="pSiteRate">Pサイト率（％）:</label>
             <input type="number" id="pSiteRate" placeholder="例: 5">
         </div>
     </div>
 
-    <!-- 2段目: ⑤⑥⑦ -->
+    <!-- 2段目: クーポン、P使用、買取1台 -->
     <div class="input-group">
         <div>
-            <label for="coupon">⑤ クーポン（円）:</label>
+            <label for="coupon">クーポン（円）:</label>
             <input type="number" id="coupon" placeholder="例: 500">
         </div>
         <div>
-            <label for="pointsUsed">⑥ P使用（円）:</label>
+            <label for="pointsUsed">P使用（円）:</label>
             <input type="number" id="pointsUsed" placeholder="例: 200">
         </div>
         <div>
-            <label for="resaleValue">⑦ 買取1台（円）:</label>
+            <label for="resaleValue">買取1台（円）:</label>
             <input type="number" id="resaleValue" placeholder="例: 1500">
         </div>
     </div>
@@ -106,30 +116,30 @@
     <!-- 計算ボタン -->
     <button onclick="calculateProfit()">計算する</button>
 
-    <!-- 3段目: ⑧⑨⑩ -->
+    <!-- 強調表示: 合計利益、ROI -->
+    <div class="highlight-group">
+        <div>合計利益: <span id="totalProfit"></span> 円</div>
+        <div>ROI: <span id="roi"></span> %</div>
+    </div>
+
+    <!-- 3段目: 価格合計、決済額、ポイント引き分 -->
     <h2>結果</h2>
     <div class="output-group">
-        <div class="output">⑧ 価格合計: <span id="totalPrice"></span> 円</div>
-        <div class="output">⑨ 決済額: <span id="finalPayment"></span> 円</div>
-        <div class="output">⑩ ポイント引き分: <span id="pointsDiff"></span> 円</div>
+        <div class="output">価格合計: <span id="totalPrice"></span> 円</div>
+        <div class="output">決済額: <span id="finalPayment"></span> 円</div>
+        <div class="output">ポイント引き分: <span id="pointsDiff"></span> 円</div>
     </div>
 
-    <!-- 4段目: ⑪⑫ -->
+    <!-- 4段目: ポイントサイト、ポイント合計 -->
     <div class="output-group">
-        <div class="output">⑪ ポイントサイト: <span id="pSitePoints"></span> 円</div>
-        <div class="output">⑫ ポイント合計: <span id="totalPoints"></span> 円</div>
+        <div class="output">ポイントサイト: <span id="pSitePoints"></span> 円</div>
+        <div class="output">ポイント合計: <span id="totalPoints"></span> 円</div>
     </div>
 
-    <!-- 5段目: ⑬⑭ -->
+    <!-- 5段目: 実質総額、買取総額 -->
     <div class="output-group">
-        <div class="output">⑬ 実質総額: <span id="netTotal"></span> 円</div>
-        <div class="output">⑭ 買取総額: <span id="totalResale"></span> 円</div>
-    </div>
-
-    <!-- 6段目: ⑮⑯ -->
-    <div class="output-group">
-        <div class="output">⑮ 合計利益: <span id="totalProfit"></span> 円</div>
-        <div class="output">⑯ ROI: <span id="roi"></span> %</div>
+        <div class="output">実質総額: <span id="netTotal"></span> 円</div>
+        <div class="output">買取総額: <span id="totalResale"></span> 円</div>
     </div>
 
     <!-- JavaScript部分 -->
@@ -145,15 +155,15 @@
             let resaleValue = parseFloat(document.getElementById('resaleValue').value) || 0;
 
             // 計算
-            let totalPrice = price * quantity; // ⑧ 価格合計
-            let finalPayment = totalPrice - coupon; // ⑨ 決済額
-            let pointsDiff = finalPayment - pointsEarnedRate; // ⑩ ポイント引き分
-            let pSitePoints = totalPrice * (pSiteRate / 100); // ⑪ ポイントサイト
-            let totalPoints = pointsEarnedRate + pSitePoints; // ⑫ ポイント合計
-            let netTotal = finalPayment - totalPoints; // ⑬ 実質総額
-            let totalResale = quantity * resaleValue; // ⑭ 買取総額
-            let totalProfit = totalResale - netTotal; // ⑮ 合計利益
-            let roi = (totalProfit / netTotal) * 100; // ⑯ ROI
+            let totalPrice = price * quantity; // 価格合計
+            let finalPayment = totalPrice - coupon; // 決済額
+            let pointsDiff = finalPayment - pointsEarnedRate; // ポイント引き分
+            let pSitePoints = totalPrice * (pSiteRate / 100); // ポイントサイト
+            let totalPoints = pointsEarnedRate + pSitePoints; // ポイント合計
+            let netTotal = finalPayment - totalPoints; // 実質総額
+            let totalResale = quantity * resaleValue; // 買取総額
+            let totalProfit = totalResale - netTotal; // 合計利益
+            let roi = (totalProfit / netTotal) * 100; // ROI
 
             // 結果を表示
             document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
