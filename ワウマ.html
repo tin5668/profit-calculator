@@ -38,7 +38,6 @@
             margin-top: 20px;
             padding: 10px;
             width: 100%;
-            background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 5px;
@@ -47,6 +46,12 @@
         }
         button:hover {
             background-color: #0056b3;
+        }
+        button.calculate {
+            background-color: #007BFF;
+        }
+        button.record {
+            background-color: #28a745;
         }
         h2 {
             margin-top: 20px;
@@ -114,7 +119,7 @@
     </div>
 
     <!-- 計算ボタン -->
-    <button onclick="calculateProfit()">計算する</button>
+    <button class="calculate" onclick="calculateProfit()">計算する</button>
 
     <!-- 強調表示: 合計利益、ROI -->
     <div class="highlight-group">
@@ -142,6 +147,9 @@
         <div class="output">買取総額: <span id="totalResale"></span> 円</div>
     </div>
 
+    <!-- 記録ボタン -->
+    <button class="record" onclick="recordData()">記録する</button>
+
     <!-- JavaScript部分 -->
     <script>
         function calculateProfit() {
@@ -157,7 +165,7 @@
             // 計算
             let totalPrice = price * quantity; // 価格合計
             let finalPayment = totalPrice - coupon; // 決済額
-            let pointsDiff = finalPayment - pointsEarnedRate; // ポイント引き分
+            let pointsDiff = finalPayment - pointsUsed; // ポイント引き分
             let pSitePoints = totalPrice * (pSiteRate / 100); // ポイントサイト
             let totalPoints = pointsEarnedRate + pSitePoints; // ポイント合計
             let netTotal = finalPayment - totalPoints; // 実質総額
@@ -176,7 +184,58 @@
             document.getElementById('totalProfit').textContent = totalProfit.toFixed(2);
             document.getElementById('roi').textContent = roi.toFixed(2);
         }
+
+        function recordData() {
+            // 入力値と計算結果を取得
+            let price = document.getElementById('price').value || 0;
+            let quantity = document.getElementById('quantity').value || 0;
+            let pointsUsed = document.getElementById('pointsUsed').value || 0;
+            let coupon = document.getElementById('coupon').value || 0;
+            let pointsEarnedRate = document.getElementById('pointsEarnedRate').value || 0;
+            let pSiteRate = document.getElementById('pSiteRate').value || 0;
+            let resaleValue = document.getElementById('resaleValue').value || 0;
+            let totalPrice = document.getElementById('totalPrice').textContent || 0;
+            let finalPayment = document.getElementById('finalPayment').textContent || 0;
+            let pointsDiff = document.getElementById('pointsDiff').textContent || 0;
+            let pSitePoints = document.getElementById('pSitePoints').textContent || 0;
+            let totalPoints = document.getElementById('totalPoints').textContent || 0;
+            let netTotal = document.getElementById('netTotal').textContent || 0;
+            let totalResale = document.getElementById('totalResale').textContent || 0;
+            let totalProfit = document.getElementById('totalProfit').textContent || 0;
+            let roi = document.getElementById('roi').textContent || 0;
+
+            // 空欄を挿入
+            let emptyField = '';
+
+            // データを指定された順序で並べる
+            let data = [
+                price,
+                quantity,
+                totalPrice,
+                pointsUsed,
+                coupon,
+                finalPayment,
+                emptyField,
+                pointsEarnedRate,
+                pSiteRate,
+                pSitePoints,
+                totalPoints,
+                netTotal,
+                resaleValue,
+                totalResale,
+                totalProfit,
+                roi
+            ].join('\t'); // タブ区切りで結合
+
+            // データをクリップボードにコピー
+            navigator.clipboard.writeText(data).then(() => {
+                alert('データがクリップボードにコピーされました！');
+            }).catch(err => {
+                alert('データのコピーに失敗しました: ' + err);
+            });
+        }
     </script>
 
 </body>
 </html>
+
